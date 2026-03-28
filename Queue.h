@@ -1,65 +1,66 @@
-#ifndef queue_h
-#define queue_h
-#include "Node.h"
+#ifndef QUEUE_H
+#define QUEUE_H
 
 #include <iostream>
+#include "Node.h"
 
 using namespace std;
 
 class Queue {
-	NodePtr headPtr,tailPtr;
-	int size;
+private:
+    NodePtr headPtr;
+    NodePtr tailPtr;
+    int size;
+
 public:
-    void enqueue(int);
-    int dequeue();
-    Queue();
-    ~Queue();
+    Queue() : headPtr(NULL), tailPtr(NULL), size(0) {}
+
+    // Updated destructor to print leftover items
+    ~Queue() {
+        while (size > 0) {
+            dequeue(); 
+        }
+    }
+
+    void enqueue(int x, int y) {
+        NodePtr new_node = new NODE(x, y);
+        if (size == 0) {
+            headPtr = new_node;
+        } else {
+            tailPtr->set_next(new_node);
+        }
+        tailPtr = new_node;
+        size++;
+    }
+
+    int dequeue() {
+        if (size == 0 || headPtr == NULL) {
+            return -1;
+        }
+
+        NodePtr out = headPtr;
+        int cost = out->get_price();
+        string name = out->get_name();
+
+        // Prints the food name and "Removing..."
+        cout << name << endl;
+        if (name != "No Food") {
+            cout << "Removing " << name << endl;
+        } else {
+            cout << "Removing" << endl;
+        }
+
+        headPtr = headPtr->get_next();
+        if (headPtr == NULL) {
+            tailPtr = NULL;
+        }
+
+        delete out;
+        size--;
+        return cost;
+    }
+
+    int get_size() const { return size; }
 };
-
-
-void Queue::enqueue(int x){
-  NodePtr new_node = new NODE(x);
-  if (!new_node) {
-    cerr << "Error for some reason" << endl;
-  }
-
-  if (!headPtr) {
-    headPtr = new_node;
-    tailPtr = new_node;
-  } else {
-    tailPtr->set_next(new_node);
-    tailPtr = new_node;
-  }
-  ++size;
-
-}
-
-int Queue::dequeue(){
-  if(size > 0) { //size is number of node in the queue
-    NodePtr tmp = headPtr; //temp point to head
-    int val = headPtr->get_value(); //val=data inside the node
-    headPtr = headPtr->get_next(); //move head pointer to next node in the queue
-    delete tmp;
-    --size;
-    return val; //return val after dequeue success to main.cpp
-  }
-  cout<<"Empty Queue"<<endl; //if queue is empty
-  return -1;
-}
-
-
-Queue::Queue(){
-  size = 0;
-  headPtr = NULL;
-  tailPtr = NULL;
-}
-Queue::~Queue(){
-  cout<<"Clearing queue"<<endl;
-  while (size) { //loop stop when size is 0 (false)
-    int x = dequeue();
-    cout << "dequeing "<< x << endl;
-  }
-}
-
 
 #endif
