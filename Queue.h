@@ -22,7 +22,6 @@ void Queue::enqueue(int x){
   if (!new_node) {
     cerr << "Error for some reason" << endl;
   }
-  ++size;
 
   if (!headPtr) {
     headPtr = new_node;
@@ -31,18 +30,20 @@ void Queue::enqueue(int x){
     tailPtr->set_next(new_node);
     tailPtr = new_node;
   }
+  ++size;
+
 }
 
 int Queue::dequeue(){
-  if(size > 0) {
-    NodePtr tmp = headPtr;
-    int val = headPtr->get_value();
-    headPtr = headPtr->get_next();
+  if(size > 0) { //size is number of node in the queue
+    NodePtr tmp = headPtr; //temp point to head
+    int val = headPtr->get_value(); //val=data inside the node
+    headPtr = headPtr->get_next(); //move head pointer to next node in the queue
     delete tmp;
     --size;
-    return val;
+    return val; //return val after dequeue success to main.cpp
   }
-  cout<<"Empty Queue"<<endl;
+  cout<<"Empty Queue"<<endl; //if queue is empty
   return -1;
 }
 
@@ -54,7 +55,7 @@ Queue::Queue(){
 }
 Queue::~Queue(){
   cout<<"Clearing queue"<<endl;
-  while (size) {
+  while (size) { //loop stop when size is 0 (false)
     int x = dequeue();
     cout << "dequeing "<< x << endl;
   }
